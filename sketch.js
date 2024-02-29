@@ -10,7 +10,7 @@ let x2, y2; // 之后进行鼻子的坐标设置
 let foods = [];
 
 function setup() {
-    createCanvas(1200, 600);
+  createCanvas(windowWidth, windowHeight);
 
     video = createCapture(VIDEO);
     video.size(width, height);
@@ -27,10 +27,11 @@ function setup() {
     
     for (let i = 0; i < 10; i++) { 
       // 食物随机出现的位置在距离上下左右边都有一定距离的地方
-      let foodX = random(width -1180, width -20);
-      let foodY = random(height -580, height -20);
-      let foodType = int(random(0, 5)); 
-      foods.push(new Food(foodX, foodY, foodType));
+      let foodX = random(width*0.1, width *0.9);
+      let foodY = random(height *0.1, height *0.9);
+      let foodType = int(random(0, 8)); 
+      let foodSize = random(30, 50); // 随机生成食物的大小
+        foods.push(new Food(foodX, foodY, foodType, foodSize));
   }
   
 }
@@ -40,7 +41,7 @@ function modelReady() {
 }
 
 function draw() {
-    background(200, 230, 250);
+  createCanvas(windowWidth, windowHeight);
     strokeWeight(0);
 
     //这是用鼻子来控制鱼的代码
@@ -98,36 +99,50 @@ class Fish {
 }
 
 class Food {
-    constructor(x, y, type) {
-        this.x = x;
-        this.y = y;
-        this.type = type;
-        this.size = 100;
+  constructor(x, y, type, size) {
+    this.x = x;
+    this.y = y;
+    this.type = type;
+    this.size = size;
     }
 
     display() {
         noStroke();
+        textSize(this.size);
         switch (this.type) {
             case 0:
-                fill(255, 0, 0); // 红色表示芝士
+                fill(255, 0, 0); 
                 text("🧀", this.x, this.y);
                 break;
             case 1:
-                fill(0, 255, 0); // 绿色表示苹果
+                fill(0, 255, 0); 
                 text("🍏", this.x, this.y);
                 break;
             case 2:
-                fill(255, 255, 0); // 黄色表示丸子
+                fill(255, 255, 0); 
                 text("🍡", this.x, this.y);
                 break;
             case 3:
-                fill(255, 165, 0); // 橙色表示蛋糕
-                text("🍰", this.x, this.y);
+                fill(255, 165, 0); 
+                text("🎂", this.x, this.y);
                 break;
             case 4:
-                fill(255); // 白色表示冰激凌
+                fill(255); 
                 text("🍦", this.x, this.y);
                 break;
+            case 5:
+                  fill(255, 215, 0); 
+                  text("🍧", this.x, this.y);
+                  break;
+            case 6:
+                  fill(255, 205, 0); 
+                  text("🍙", this.x, this.y);
+                  break;
+            case 7:
+                  fill(255, 200, 0); 
+                  text("🧃", this.x, this.y);
+                  break;
+          
         }
     }
 }
