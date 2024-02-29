@@ -28,11 +28,11 @@ function setup() {
     fish = new Fish(random(width), random(height), fsize);
 
     for (let i = 0; i < 10; i++) {
-        // 食物随机出现的位置在距离上下左右边都有一定距离的地方
+        // 食物随机出现，距离上下左右有一定距离
         let foodX = random(width * 0.1, width * 0.9);
         let foodY = random(height * 0.1, height * 0.9);
         let foodType = int(random(0, 8));
-        let foodSize = random(40, 50); // 随机生成食物的大小
+        let foodSize = random(40, 50); // 随机食物大小
         foods.push(new Food(foodX, foodY, foodType, foodSize));
     }
 
@@ -76,14 +76,14 @@ function draw() {
         bubbleGroup.update();
         bubbleGroup.display();
         if (bubbleGroup.alpha <= 0) {
-            bubbles.splice(i, 1); // 从数组中移除泡泡组
+            bubbles.splice(i, 1); // 从数组中移除泡泡
         }
     }
 }
 
 function createBubbleGroup() {
-    let bubbleX = fish.x - 60; // 泡泡组的初始 x 坐标（鱼的最左端）
-    let bubbleY = fish.y; // 泡泡组的初始 y 坐标（鱼的位置）
+    let bubbleX = fish.x - 60; // 泡泡组的初始 x 坐标
+    let bubbleY = fish.y; // 泡泡组的初始 y 坐标
     let bubbleGroup = new BubbleGroup(bubbleX, bubbleY);
     bubbles.push(bubbleGroup);
 }
@@ -178,8 +178,8 @@ class Bubble {
     }
 
     update() {
-        this.alpha -= 3; // 降低透明度以实现消失效果
-        this.y -= 1; // 向上移动
+        this.alpha -= 4; 
+        this.y -= 1; 
     }
 
     display() {
