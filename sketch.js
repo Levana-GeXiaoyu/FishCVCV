@@ -12,6 +12,9 @@ let bubbles = [];
 let bubbleTimer = 5000;
 let particles = []; // 存储粒子效果
 
+
+
+
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
@@ -19,13 +22,13 @@ function setup() {
     video.size(width, height);
     poseNet = ml5.poseNet(video, modelReady);
 
-    //这串代码是：我已经准备好，摄像机已经开始捕捉我的头了
+    // 这串代码是：我已经准备好，摄像机已经开始捕捉我的头了
     poseNet.on('pose', function(results) {
         poses = results;
     });
     video.hide();
 
-    //创建一条鱼
+    // 创建一条鱼
     fish = new Fish(random(width), random(height), fsize);
 
     for (let i = 0; i < 10; i++) {
@@ -46,7 +49,8 @@ function modelReady() {
 }
 
 function draw() {
-    background(255);
+   
+    clear(); // 清除画布
 
     drawSeabed();
 
@@ -104,7 +108,11 @@ function mouseClicked() {
     foods.push(new Food(mouseX, mouseY, int(random(0, 8)), random(40, 50)));
 }
 
-//沙滩
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
+
+// 沙滩
 function drawSeabed() {
     let seabedY = height - 100;
     fill(104, 238, 154, 99);
@@ -137,10 +145,10 @@ class Fish {
         this.eyeColor = color(255);
     }
 
-    //让fish来实时跟踪我的鼻子的代码
+    // 让fish来实时跟踪我的鼻子的代码
     update(newX, newY) {
-        this.x = lerp(this.x, newX, speed); //鱼的x坐标会根据鼻子的位置逐渐移动到新的位置
-        this.y = lerp(this.y, newY, speed); //y同上
+        this.x = lerp(this.x, newX, speed); // 鱼的x坐标会根据鼻子的位置逐渐移动到新的位置
+        this.y = lerp(this.y, newY, speed); // y同上
     }
 
     // 更新鱼的颜色
@@ -210,7 +218,6 @@ class Food {
                 fill(255, 200, 0);
                 text("🧃", this.x, this.y);
                 break;
-
         }
     }
 }
