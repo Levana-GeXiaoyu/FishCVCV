@@ -10,6 +10,7 @@ let x2, y2; // 之后进行鼻子的坐标设置
 let foods = [];
 let bubbles = [];
 let bubbleTimer = 5000;
+let particles = []; // 存储粒子效果
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -26,7 +27,6 @@ function setup() {
 
     //创建一条鱼
     fish = new Fish(random(width), random(height), fsize);
-    
 
     for (let i = 0; i < 10; i++) {
         // 食物随机出现，距离上下左右有一定距离
@@ -46,12 +46,9 @@ function modelReady() {
 }
 
 function draw() {
-    background(0, 204, 255); // 设置海底背景颜色
+    background(255);
 
-    drawWaterSurface();
-    drawUnderwater();
     drawSeabed();
-
 
     //这是用鼻子来控制鱼的代码
     if (poses.length > 0) {
@@ -73,6 +70,12 @@ function draw() {
         if (dist(food.x, food.y, fish.x - 30, fish.y - 10) < 20) {
             foods.splice(i, 1); // 从数组中移除食物
             fish.updateColor(color(255, 100, 33)); // 吃到了食物，鱼的颜色逐渐变为红色
+
+            // 添加粒子效果
+            for (let j = 0; j < 30; j++) {
+                let particle = new Particle(food.x, food.y);
+                particles.push(particle);
+            }
         }
     }
 
@@ -85,49 +88,38 @@ function draw() {
             bubbles.splice(i, 1); // 从数组中移除泡泡
         }
     }
+
+    // 更新和显示粒子效果
+    for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].display();
+        if (particles[i].alpha <= 0) {
+            particles.splice(i, 1); // 从数组中移除粒子
+        }
+    }
 }
+
 function mouseClicked() {
     // 当鼠标被点击时，创建一个新的食物对象
     foods.push(new Food(mouseX, mouseY, int(random(0, 8)), random(40, 50)));
 }
 
-function drawWaterSurface() {
-    stroke(100, 150, 200);
-    strokeWeight(2);
-    for (let x = 0; x <= width; x += 5) {
-      let y = 20 * sin(0.05 * x + millis() / 1000.0);
-      line(x, 50 + y, x, 0); // 从水面到画布顶部
-    }
-  }
-
-function drawUnderwater() {
-    let waterDepth = 50; // 水面到水下的深度
-    for (let y = 0; y < height - waterDepth; y++) {
-      let alpha = map(y, 0, height - waterDepth, 50, 0);
-      stroke(20, 50 + y / 3, 70 + y / 3, alpha);
-      line(0, y + waterDepth, width, y + waterDepth);
-   
-    }
-  }
-  
-  //沙滩
-  function drawSeabed() {
+//沙滩
+function drawSeabed() {
     let seabedY = height - 100;
-    fill(255, 204, 102);
+    fill(104, 238, 154, 99);
     noStroke();
     beginShape();
     vertex(0, seabedY);
     for (let i = 0; i <= width; i += 20) {
-      let y = noise(i * 0.05, frameCount * 0.02) * 20;
-      vertex(i, seabedY + y);
+        let y = noise(i * 0.05, frameCount * 0.02) * 20;
+        vertex(i, seabedY + y);
     }
     vertex(width, seabedY);
     vertex(width, height);
     vertex(0, height);
     endShape(CLOSE);
-  }
-  
-  
+}
 
 function createBubbleGroup() {
     let bubbleX = fish.x - 60; // 泡泡组的初始 x 坐标
@@ -141,9 +133,10 @@ class Fish {
         this.x = x;
         this.y = y;
         this.size = size;
-        this.bodyColor = color(192, 192, 128);
+        this.bodyColor = color(255, 105, 0); // 鲜艳的橙色
         this.eyeColor = color(255);
     }
+
     //让fish来实时跟踪我的鼻子的代码
     update(newX, newY) {
         this.x = lerp(this.x, newX, speed); //鱼的x坐标会根据鼻子的位置逐渐移动到新的位置
@@ -169,7 +162,7 @@ class Fish {
         // 鱼的眼睛
         fill(this.eyeColor);
         noStroke();
-        ellipse(this.x - 30, this.y - 10, 10, 10);
+        ellipse(this.x - 30, this.y - 10, 13, 13);
     }
 }
 
@@ -231,8 +224,8 @@ class Bubble {
     }
 
     update() {
-        this.alpha -= 4; 
-        this.y -= 1; 
+        this.alpha -= 4;
+        this.y -= 1;
     }
 
     display() {
@@ -243,28 +236,54 @@ class Bubble {
 }
 
 class BubbleGroup {
-  constructor(x, y) {
-      this.x = x;
-      this.y = y;
-      this.bubbles = [];
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.bubbles = [];
 
-      // 创建两个大小不同的泡泡，并设置垂直偏移
-      let bubble1 = new Bubble(this.x, this.y - 10, 20);
-      let bubble2 = new Bubble(this.x, this.y + 10, 15);
+        // 创建两个大小不同的泡泡，并设置垂直偏移
+        let bubble1 = new Bubble(this.x, this.y - 10, 20);
+        let bubble2 = new Bubble(this.x, this.y + 10, 15);
 
-      this.bubbles.push(bubble1);
-      this.bubbles.push(bubble2);
-  }
+        this.bubbles.push(bubble1);
+        this.bubbles.push(bubble2);
+    }
 
-  update() {
-      for (let bubble of this.bubbles) {
-          bubble.update();
-      }
-  }
+    update() {
+        for (let bubble of this.bubbles) {
+            bubble.update();
+        }
+    }
 
-  display() {
-      for (let bubble of this.bubbles) {
-          bubble.display();
-      }
-  }
+    display() {
+        for (let bubble of this.bubbles) {
+            bubble.display();
+        }
+    }
+}
+
+class Particle {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = random(5, 15);
+        this.alpha = 255;
+        this.color = color(255, 255, 0); // 明黄色
+        this.vx = random(-1, 1);
+        this.vy = random(-5, -1);
+        this.gravity = 0.1;
+    }
+
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += this.gravity;
+        this.alpha -= 5;
+    }
+
+    display() {
+        noStroke();
+        fill(this.color, this.alpha);
+        ellipse(this.x, this.y, this.size);
+    }
 }
