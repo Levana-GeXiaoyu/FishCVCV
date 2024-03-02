@@ -1,16 +1,16 @@
 let fish;
-let fsize = 50.0; // Fish的大小
-let speed = 0.03; // Fish的速度
+let fsize = 50.0; 
+let speed = 0.03; 
 
 let video;
-let poseNet; // 监测摄像头捕获的视频中的人的姿势（不仅仅只包含鼻子）
+let poseNet; //Monitor the posture of the person in the video captured by the camera (not just the nose)
 let poses = [];
-let x2, y2; // 之后进行鼻子的坐标设置
+let x2, y2; // Set the coordinates of the nose
 
 let foods = [];
 let bubbles = [];
 let bubbleTimer = 5000;
-let particles = []; // 存储粒子效果
+let particles = []; // Store particle effects
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -44,7 +44,7 @@ function modelReady() {
 function draw() {
     clear();
 
-    // 添加文字提示
+    // text prompt
     textSize(20);
     fill(100);
     text("Swing your head to control the movement of fish to eat food and tap the screen to drop food.", 20, 40);
@@ -157,7 +157,7 @@ class Fish {
         if (direction === -1) {
             fill(this.bodyColor);
             stroke(this.bodyColor);
-            rect(this.x - 50, this.y - 35, 100, 70, 20); // 绘制圆角矩形
+            rect(this.x - 50, this.y - 35, 100, 70, 20); 
     
             fill(this.bodyColor);
             noStroke();
