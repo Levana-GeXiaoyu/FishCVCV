@@ -44,6 +44,11 @@ function modelReady() {
 function draw() {
     clear();
 
+    // 添加文字提示
+    textSize(20);
+    fill(100);
+    text("Swing your head to control the movement of fish to eat food and tap the screen to drop food.", 20, 40);
+
     drawSeabed();
 
     if (poses.length > 0) {
@@ -148,33 +153,37 @@ class Fish {
 
     display() {
         let direction = this.getDirection();
-
+    
         if (direction === -1) {
             fill(this.bodyColor);
             stroke(this.bodyColor);
-            ellipse(this.x, this.y, 100, 70);
-
+            rect(this.x - 50, this.y - 35, 100, 70, 20); // 绘制圆角矩形
+    
             fill(this.bodyColor);
             noStroke();
             triangle(this.x - 40, this.y, this.x - 85, this.y - 30, this.x - 85, this.y + 30);
-
+    
             fill(this.eyeColor);
             noStroke();
             ellipse(this.x + 30, this.y - 10, 13, 13);
+            
         } else {
             fill(this.bodyColor);
             stroke(this.bodyColor);
-            ellipse(this.x, this.y, 100, 70);
-
+            rect(this.x - 50, this.y - 35, 100, 70, 20); // 绘制圆角矩形
+    
             fill(this.bodyColor);
             noStroke();
             triangle(this.x + 40, this.y, this.x + 85, this.y - 30, this.x + 85, this.y + 30);
-
+    
             fill(this.eyeColor);
             noStroke();
             ellipse(this.x - 30, this.y - 10, 13, 13);
-        }
+            
+          }
     }
+    
+    
 
     getDirection() {
         return this.x > width / 2 ? -1 : 1;
